@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ms">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#140d0a">
+    <title>Gua Terlarang</title>
+    <meta name="description" content="Pilih wira cerita rakyat Melayu, turun ke lapan tingkat Gua Terlarang dan patahkan sumpah Sang Kelembai. Main percuma terus dalam pelayar.">
+    <!-- Link preview card for Telegram, WhatsApp and others. shortcut: absolute URLs point at the GitHub Pages address; change them if the game moves. -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Gua Terlarang">
+    <meta property="og:title" content="Gua Terlarang — Beranikah anda turun ke dasarnya?">
+    <meta property="og:description" content="Pilih wira cerita rakyat Melayu, turun ke lapan tingkat Gua Terlarang dan patahkan sumpah Sang Kelembai. Main percuma terus dalam pelayar.">
+    <meta property="og:url" content="https://altrabird.github.io/gua-terlarang/">
+    <meta property="og:image" content="https://altrabird.github.io/gua-terlarang/preview.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:locale" content="ms_MY">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon" href="TemplateData/favicon.ico" sizes="any">
+    <link rel="icon" type="image/png" href="TemplateData/favicon.png">
+    <link rel="apple-touch-icon" href="TemplateData/apple-touch-icon.png">
+    <style>
+      html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #140d0a; }
+      #unity-canvas { position: fixed; inset: 0; width: 100%; height: 100%; display: block; background: #140d0a; touch-action: none; outline: none; }
+      #loader { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+        color: #f4e9d2; font: 600 16px/1.4 Georgia, "Times New Roman", serif; background: radial-gradient(circle at 50% 40%, #3a1f14, #140d0a 70%); }
+      #loader h1 { font-size: clamp(28px, 7vw, 56px); margin: 0 0 18px; letter-spacing: 1px; color: #ffd98a; text-shadow: 0 3px 0 #6b3d1a; text-align: center; }
+      #bar { width: min(420px, 80vw); height: 14px; border-radius: 7px; background: #0f181e; border: 2px solid #f4e9d2; overflow: hidden; }
+      #fill { height: 100%; width: 0; background: linear-gradient(90deg, #c8462f, #ffd98a); transition: width .2s; }
+      #msg { margin-top: 12px; opacity: .85; font-size: 14px; text-align: center; padding: 0 16px; }
+      #hint { margin-top: 22px; font-size: 13px; opacity: .6; text-align: center; padding: 0 16px; }
+    </style>
+  </head>
+  <body>
+    <canvas id="unity-canvas" tabindex="-1"></canvas>
+    <div id="loader"><h1>Gua Terlarang</h1><div id="bar"><div id="fill"></div></div><div id="msg">Menyalakan obor&hellip;</div><div id="hint">Ketik di mana-mana semasa menunggu supaya lagu bermula sebaik sahaja gua dibuka.</div></div>
+    <script>
+      var canvas = document.querySelector("#unity-canvas");
+      var buildUrl = "Build";
+      var config = {
+        arguments: [],
+        dataUrl: buildUrl + "/web.data.unityweb",
+        frameworkUrl: buildUrl + "/web.framework.js.unityweb",
+        codeUrl: buildUrl + "/web.wasm.unityweb",
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: "Altrabird",
+        productName: "Gua Terlarang",
+        productVersion: "0.1.0",
+        autoSyncPersistentDataPath: true,
+        showBanner: function (msg, type) { if (type == 'error') document.querySelector("#msg").textContent = msg; else console.warn(msg); }
+      };
+      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) config.devicePixelRatio = Math.min(window.devicePixelRatio || 1, 1.5);
+      canvas.addEventListener("contextmenu", function (e) { e.preventDefault(); });
+      var script = document.createElement("script");
+      script.src = buildUrl + "/web.loader.js";
+      script.onload = function () {
+        createUnityInstance(canvas, config, function (p) { document.querySelector("#fill").style.width = (100 * p) + "%"; })
+          .then(function (instance) {
+            window.unityInstance = instance; document.querySelector("#loader").style.display = "none"; canvas.focus();   // the theme song starts by itself (browsers may hold it until the first tap)
+          })
+          .catch(function (message) { document.querySelector("#msg").textContent = "Permainan tidak dapat dimulakan: " + message; });
+      };
+      script.onerror = function () { document.querySelector("#msg").textContent = "Fail permainan tidak dapat dimuatkan."; };
+      document.body.appendChild(script);
+    </script>
+  </body>
+</html>
